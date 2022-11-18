@@ -1,6 +1,6 @@
 package com.example.spring_app.topic.controller;
 
-import com.example.spring_app.topic.dao.Topic;
+import com.example.spring_app.topic.entity.Topic;
 import com.example.spring_app.topic.service.TopicService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
@@ -23,11 +23,11 @@ public class TopicController {
     }
 
     @GetMapping("/topics/{id}")
-    public Topic getTopicById(@PathVariable String id) {
+    public ResponseEntity<Object> getTopicById(@PathVariable String id) {
         if(topicService.doesTopicExist(id)) {
-            return topicService.getTopicById(id);
+            return ResponseEntity.ok(topicService.getTopicById(id));
         } else {
-            return null;
+            return ResponseEntity.notFound().build();
         }
     }
 
@@ -53,7 +53,7 @@ public class TopicController {
         if(!topicService.doesTopicExist(id)) {
             return ResponseEntity.badRequest().body("Topic with id " + id + " does not exist");
         }
-        topicService.updateTopic(topic, id);
+        topicService.addTopic(topic);
         return ResponseEntity.ok().body("Topic updated successfully");
     }
 
